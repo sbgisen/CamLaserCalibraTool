@@ -19,7 +19,7 @@ void CamPoseEst::FindTargetCorner(cv::Mat &img_raw,
     {
       cv::cornerSubPix(
           img_raw, corners, cv::Size(11, 11), cv::Size(-1, -1),
-          cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
+          cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1));
       if (corners.size() == col * row)
       {
         int count = 0;
@@ -84,10 +84,9 @@ void CamPoseEst::FindTargetCorner(cv::Mat &img_raw,
       }
 
       int window_size = 3;
-      cv::cornerSubPix(
-          img_raw, tag_corners, cv::Size(window_size, window_size), cv::Size(-1, -1),
-          cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
-      cv::cvtColor(img_raw, img_raw, CV_GRAY2BGR);
+      cv::cornerSubPix(img_raw, tag_corners, cv::Size(window_size, window_size), cv::Size(-1, -1),
+                       cv::TermCriteria(cv::TermCriteria::EPS + cv::TermCriteria::MAX_ITER, 30, 0.1));
+      cv::cvtColor(img_raw, img_raw, cv::COLOR_GRAY2BGR);
 
       int index = 0;
       for (auto &tag : detections)
@@ -109,7 +108,7 @@ void CamPoseEst::FindTargetCorner(cv::Mat &img_raw,
                    cv::Scalar(0, 255, 0));
         cv::putText(img_raw, std::to_string(id),
                     cv::Point2f(tag.cxy.first, tag.cxy.second),
-                    CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
+                    cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
 
           // 四个角点坐标
         p3ds.emplace_back(cv::Point3f(tag_spacing_sz * tag_col,
@@ -171,13 +170,12 @@ void CamPoseEst::FindTargetCorner(cv::Mat &img_raw,
 //                  img_raw, tag_corners, cv::Size(window_size, window_size), cv::Size(-1, -1),
 //                  cv::TermCriteria(CV_TERMCRIT_EPS + CV_TERMCRIT_ITER, 30, 0.1));
 
-          cv::cvtColor(img_raw, img_raw, CV_GRAY2BGR);
+          cv::cvtColor(img_raw, img_raw, cv::COLOR_GRAY2BGR);
 
           cv::circle(img_raw, cv::Point2f(tag.cxy.first, tag.cxy.second), 3,
                      cv::Scalar(0, 255, 0));
-          cv::putText(img_raw, std::to_string(tag.id),
-                      cv::Point2f(tag.cxy.first, tag.cxy.second),
-                      CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
+          cv::putText(img_raw, std::to_string(tag.id), cv::Point2f(tag.cxy.first, tag.cxy.second),
+                      cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 255));
 
           // 四个角点坐标
           p3ds.emplace_back(cv::Point3f(0., 0., 0.0));
@@ -235,17 +233,18 @@ bool CamPoseEst::EstimatePose(const std::vector<cv::Point3f> &p3ds,
   Twc.block<3, 1>(0, 3) = -Rcw.inverse() * tcw;
 
   std::cout << "twc: "<<Twc(0, 3)<<" "<<Twc(1, 3)<<" "<<Twc(2, 3)<<std::endl;
-  cv::putText(
-      img_raw, "t_wc: (m) " + std::to_string(Twc(0, 3)) + " " + std::to_string(Twc(1, 3)) + " " + std::to_string(Twc(2, 3)),
-      cv::Point2f(50, 30), CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0));
+  cv::putText(img_raw,
+              "t_wc: (m) " + std::to_string(Twc(0, 3)) + " " + std::to_string(Twc(1, 3)) + " " +
+                  std::to_string(Twc(2, 3)),
+              cv::Point2f(50, 30), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(255, 0, 0));
 
-//  std::vector<cv::Point3f> axis;
-//  std::vector<cv::Point2f> imgpts;
-//  axis.push_back(cv::Point3f(0,0,0));
-//  axis.push_back(cv::Point3f(1,0,0));
-//  axis.push_back(cv::Point3f(0,1,0));
-//  axis.push_back(cv::Point3f(0,0,1));
-//  cv::projectPoints(axis, cv_r, cv_t, K, dist,imgpts);
+  //  std::vector<cv::Point3f> axis;
+  //  std::vector<cv::Point2f> imgpts;
+  //  axis.push_back(cv::Point3f(0,0,0));
+  //  axis.push_back(cv::Point3f(1,0,0));
+  //  axis.push_back(cv::Point3f(0,1,0));
+  //  axis.push_back(cv::Point3f(0,0,1));
+  //  cv::projectPoints(axis, cv_r, cv_t, K, dist,imgpts);
 
   std::vector<Eigen::Vector3d> axis;
   std::vector<cv::Point2f> imgpts;
@@ -273,7 +272,7 @@ bool CamPoseEst::calcCamPose(const double &timestamps, const cv::Mat &image,
   cv::Mat img_raw = image.clone();
   if (img_raw.channels() == 3)
   {
-    cv::cvtColor(img_raw, img_raw, CV_BGR2GRAY);
+    cv::cvtColor(img_raw, img_raw, cv::COLOR_BGR2GRAY);
   }
 
   std::vector<cv::Point3f> p3ds;
