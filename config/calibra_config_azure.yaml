@@ -1,0 +1,32 @@
+%YAML:1.0
+
+#common parameters
+savePath: "/home/gisen/soar/src/CamLaserCalibraTool/"
+bag_path: "/home/gisen/soar/src/CamLaserCalibraTool/2023-04-27-18-03-06.bag"
+
+scan_topic_name: "/soar/laser/scan_filtered"
+img_topic_name: "/soar/head_camera/rgb/image_raw"
+
+# tag info
+tag_type: 1 # 1: kalibr_tag, 2: apriltag
+tag_size: 0.041 # tag size, unit meter
+tag_spacing: 0.232 # tag spacing, only used in kalibr_tag. For details, please see kalibr tag description.
+black_border: 2 # if you use kalibr_tag black_boarder = 2; if you use apriltag black_boarder = 1
+
+#camera calibration
+model_type: PINHOLE
+camera_name: camera
+image_width: 2048
+image_height: 1536
+
+distortion_parameters:
+   k1: 0.07693904576922429
+   k2: 0.04231807629994033
+   p1: -0.001300409481251055
+   p2: 0.0003280541849749853
+
+projection_parameters:
+   fx: 1001.815368652344
+   fy: 1002.538757324219
+   cx: 1033.5097547396
+   cy: 772.8736317587027
