@@ -11,6 +11,8 @@ This project is used to calibrating the extrinsic parameters $ T_ {cl} $ between
 3. **Laser Segment auto-Detection**。The laser segment falling on the calibration plate is automatically extracted, provided that the calibration plate is within 120 degrees directly in front of the laser, and there is only one continuous straight line segment. So, please place the calibration board in an open space when you collect calibration data.
 
 ### 3. Download and build
+Install ceres-solver 1.14.0, please refer to [ceres-solver](http://ceres-solver.org/installation.html) for details.
+
 ```c++
 mkdir LaserCameraCal_ws
 mkdir ../src
