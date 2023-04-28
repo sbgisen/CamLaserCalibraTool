@@ -86,7 +86,12 @@ int main(int argc, char **argv){
     {
       sensor_msgs::LaserScan::Ptr scan = m.instantiate<sensor_msgs::LaserScan>();
       std::vector<Eigen::Vector3d> Points;
-      TranScanToPoints(*scan,Points);
+      TranScanToPoints(*scan, Points);
+      std::vector<Eigen::Vector3d> tmp(Points.begin() + Points.size() / 2 - laser_front_offset,
+                                       Points.end() - laser_front_offset);
+      tmp.insert(tmp.end(), Points.end() - laser_front_offset, Points.end());
+      tmp.insert(tmp.end(), Points.begin(), Points.begin() + Points.size() / 2 - laser_front_offset);
+      Points = tmp;
 
 //      ii_cnt++;
 //      if(ii_cnt % 20 != 0) continue;

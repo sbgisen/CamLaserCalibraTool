@@ -10,6 +10,7 @@ std::string bag_path = "2018-12-13-11-40-16.bag";
 
 std::string scan_topic_name = "/scan";
 std::string img_topic_name = "/mynteye/left/image_raw";
+int laser_front_offset = 0;
 
 
 void readParameters(std::string config_file)
@@ -23,6 +24,7 @@ void readParameters(std::string config_file)
     fsSettings["img_topic_name"] >> img_topic_name;
     fsSettings["savePath"] >> savePath;
     fsSettings["bag_path"] >> bag_path;
+    fsSettings["laser_front_offset"] >> laser_front_offset;
 
     fsSettings.release();
 }
